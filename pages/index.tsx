@@ -7,7 +7,7 @@ import Date from '../components/date'
 import {GetStaticProps} from 'next'
 import styles from "../components/layout.module.css";
 
-const name = '[oootta]'
+const name = '@oootta'
 
 export default function Home({
                                  allPostsData
@@ -32,9 +32,12 @@ export default function Home({
                         width={144}
                         alt={name}
                     />
-                    <Link href={`https://github.com/ottaaa`}>
-                        <a className={utilStyles.heading2Xl}>{name}</a>
-                    </Link>
+                    <div className={utilStyles.headingMd}>
+                        <span>GitHub:</span>
+                        <Link href={`https://github.com/ottaaa`}>
+                            <a>{name}</a>
+                        </Link>
+                    </div>
                 </>
             </header>
             <section className={utilStyles.headingMd}>
