@@ -6,9 +6,11 @@ import Link from 'next/link'
 export const siteTitle = 'oootta blog'
 
 export default function Layout({
-                                   children
+                                   children,
+                                   home
                                }: {
     children: React.ReactNode
+    home?: boolean
 }) {
     return (
         <div className={styles.container}>
