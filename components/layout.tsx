@@ -6,8 +6,7 @@ import Link from 'next/link'
 export const siteTitle = 'oootta blog'
 
 export default function Layout({
-                                   children,
-                                   home
+                                   children
                                }: {
     children: React.ReactNode
 }) {
