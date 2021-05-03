@@ -1,0 +1,1 @@
+{"pageProps":{"postData":{"id":"blog_detail","contentHtml":"<h2>ビルド</h2>\n<p>next.js で SSG しており、チュートリアルのブログをそのまま使用している。</p>\n<h2>ホスティング</h2>\n<p>Github pages で静的ファイルの配信をしている。\nRoute 53 で独自ドメインをとり管理している。</p>\n<h2>記事の書き方</h2>\n<p>markdown のファイルを追加するとCIが走りビルドされるようにしている。</p>\n","title":"このブログの実装","date":"2021-05-05"}},"__N_SSG":true}
