@@ -5,6 +5,9 @@ import {getSortedPostsData} from '../lib/posts'
 import Link from 'next/link'
 import Date from '../components/date'
 import {GetStaticProps} from 'next'
+import styles from "../components/layout.module.css";
+
+const name = '[oootta]'
 
 export default function Home({
                                  allPostsData
@@ -20,6 +23,20 @@ export default function Home({
             <Head>
                 <title>{siteTitle}</title>
             </Head>
+            <header className={styles.header}>
+                <>
+                    <img
+                        src="/images/profile.jpg"
+                        className={utilStyles.borderCircle}
+                        height={144}
+                        width={144}
+                        alt={name}
+                    />
+                    <Link href={`https://github.com/ottaaa`}>
+                        <a className={utilStyles.heading2Xl}>{name}</a>
+                    </Link>
+                </>
+            </header>
             <section className={utilStyles.headingMd}>
             </section>
             <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
