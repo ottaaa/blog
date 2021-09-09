@@ -1,20 +1,19 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="description" content="oootta blog"/><meta property="og:image" content="https://og-image.vercel.app/oootta%20blog.png?theme=light&amp;md=0&amp;fontSize=75px&amp;images=https%3A%2F%2Fassets.zeit.co%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg"/><meta name="og:title" content="oootta blog"/><meta name="twitter:card" content="summary_large_image"/><title>SQL で GROUP BY WITH ROLLUP した際に正しく値を取得できないケース</title><meta name="next-head-count" content="8"/><link rel="preload" href="/_next/static/css/d956bfbeac7a7df3d68f.css" as="style"/><link rel="stylesheet" href="/_next/static/css/d956bfbeac7a7df3d68f.css" data-n-g=""/><link rel="preload" href="/_next/static/css/10f89600c9c8a29b49cd.css" as="style"/><link rel="stylesheet" href="/_next/static/css/10f89600c9c8a29b49cd.css" data-n-p=""/><noscript data-n-css=""></noscript><link rel="preload" href="/_next/static/chunks/webpack-189c53927ffd3caf09c3.js" as="script"/><link rel="preload" href="/_next/static/chunks/framework-c5113a73163ba9a6512c.js" as="script"/><link rel="preload" href="/_next/static/chunks/main-460b9f826c931ed60fcd.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/_app-82ddf399a0c33d87b393.js" as="script"/><link rel="preload" href="/_next/static/chunks/941-aafbdf5c5339f74919c1.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/posts/%5Bid%5D-4500bce1a92583622a7f.js" as="script"/></head><body><div id="__next"><div class="layout_container__2t4v2"><main><article><h1 class="utils_headingXl__1XecN">SQL で GROUP BY WITH ROLLUP した際に正しく値を取得できないケース</h1><div class="utils_lightText__12Ckm"><time dateTime="2021-09-10">September 10, 2021</time></div><div><h2>結論</h2>
-<p>GROUP BY hoge.id WITH ROLLUP のときに
-WITH ROLLUP のレコードでは hoge.name などを正しく取得できないケースがある。</p>
+<p>GROUP BY hoge.id WITH ROLLUP のときに WITH ROLLUP のレコードでは hoge.name などを正しく取得できないケースがある。</p>
 <h2>前提</h2>
 <p><strong>MySQL バージョン: 5.6 での実行</strong></p>
 <p>ユーザー(users)</p>
-<p>|id|name|
-|----|----|
-|1|田中|
-|2|佐藤|</p>
+<p>|id|name|<br>
+|--|---|<br>
+|1 |田中|<br>
+|2 |佐藤|</p>
 <p>ユーザーの決済(transactions)</p>
-<p>|user_id|price|
-|----|----|
-|1|1000|
-|1|2000|
-|2|3000|
-|2|4000|</p>
+<p>|user_id|price|<br>
+|-------|-----|<br>
+|   1   | 1000|<br>
+|   1   | 2000|<br>
+|   2   | 3000|<br>
+|   2   | 4000|</p>
 <p>上記のような2テーブルがあり、 ユーザーごとの合計決済額と全てのユーザーの合計決済額を出したいとする。<br>
 そこで下記のようなSQLを実行する。</p>
 <pre><code>SELECT 
@@ -28,11 +27,9 @@ GROUP BY u.id WTIH ROLLUP
 </code></pre>
 <p>すると、WITH ROLLUP の結果として出力されるレコードで正しく<code>u.name</code>が表示されない。<br>
 (<code>u.id</code>はNULLで出力されるが<code>u.name</code>はランダムで<code>u.name</code>のいずれかが出力される)</p>
-<p>WITH ROLLUP のレコードは 全てまとめたものになっており、単一の値でないため
-hoge.name がランダムに取得されるため。</p>
-<p>例えば、WITH ROLLUP のレコードにおいては<code>u.name</code>のカラムを<code>合計</code>という値で表示したい場合
-下記のように記載する。</p>
+<p>WITH ROLLUP のレコードは 全てまとめたものになっており、単一の値でないため hoge.name がランダムに取得されるため。</p>
+<p>例えば、WITH ROLLUP のレコードにおいては<code>u.name</code>のカラムを<code>合計</code>という値で表示したい場合 下記のように記載する。</p>
 <pre><code>if(count(distinct mu.id) > 1,"合計", u.name) 
 </code></pre>
 <p>参考: https://stackoverflow.com/questions/42223119/if-cases-broken-when-using-rollup</p>
-</div></article></main><div class="layout_backToHome__1vZsp"><a href="/">← 記事一覧へ</a></div></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"postData":{"id":"with_rollup_ambiguous","contentHtml":"\u003ch2\u003e結論\u003c/h2\u003e\n\u003cp\u003eGROUP BY hoge.id WITH ROLLUP のときに\nWITH ROLLUP のレコードでは hoge.name などを正しく取得できないケースがある。\u003c/p\u003e\n\u003ch2\u003e前提\u003c/h2\u003e\n\u003cp\u003e\u003cstrong\u003eMySQL バージョン: 5.6 での実行\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eユーザー(users)\u003c/p\u003e\n\u003cp\u003e|id|name|\n|----|----|\n|1|田中|\n|2|佐藤|\u003c/p\u003e\n\u003cp\u003eユーザーの決済(transactions)\u003c/p\u003e\n\u003cp\u003e|user_id|price|\n|----|----|\n|1|1000|\n|1|2000|\n|2|3000|\n|2|4000|\u003c/p\u003e\n\u003cp\u003e上記のような2テーブルがあり、 ユーザーごとの合計決済額と全てのユーザーの合計決済額を出したいとする。\u003cbr\u003e\nそこで下記のようなSQLを実行する。\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003eSELECT \nu.id\n, u.name \n, sum(t.price)\nFROM users AS u \nINNER JOIN transactions AS t\nON u.id = t.user_id\nGROUP BY u.id WTIH ROLLUP\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eすると、WITH ROLLUP の結果として出力されるレコードで正しく\u003ccode\u003eu.name\u003c/code\u003eが表示されない。\u003cbr\u003e\n(\u003ccode\u003eu.id\u003c/code\u003eはNULLで出力されるが\u003ccode\u003eu.name\u003c/code\u003eはランダムで\u003ccode\u003eu.name\u003c/code\u003eのいずれかが出力される)\u003c/p\u003e\n\u003cp\u003eWITH ROLLUP のレコードは 全てまとめたものになっており、単一の値でないため\nhoge.name がランダムに取得されるため。\u003c/p\u003e\n\u003cp\u003e例えば、WITH ROLLUP のレコードにおいては\u003ccode\u003eu.name\u003c/code\u003eのカラムを\u003ccode\u003e合計\u003c/code\u003eという値で表示したい場合\n下記のように記載する。\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003eif(count(distinct mu.id) \u003e 1,\"合計\", u.name) \n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e参考: https://stackoverflow.com/questions/42223119/if-cases-broken-when-using-rollup\u003c/p\u003e\n","title":"SQL で GROUP BY WITH ROLLUP した際に正しく値を取得できないケース","date":"2021-09-10"}},"__N_SSG":true},"page":"/posts/[id]","query":{"id":"with_rollup_ambiguous"},"buildId":"NdA5JnqSHSlUlv69l59hU","isFallback":false,"gsp":true}</script><script nomodule="" src="/_next/static/chunks/polyfills-eef578260fd80f8fff94.js"></script><script src="/_next/static/chunks/webpack-189c53927ffd3caf09c3.js" async=""></script><script src="/_next/static/chunks/framework-c5113a73163ba9a6512c.js" async=""></script><script src="/_next/static/chunks/main-460b9f826c931ed60fcd.js" async=""></script><script src="/_next/static/chunks/pages/_app-82ddf399a0c33d87b393.js" async=""></script><script src="/_next/static/chunks/941-aafbdf5c5339f74919c1.js" async=""></script><script src="/_next/static/chunks/pages/posts/%5Bid%5D-4500bce1a92583622a7f.js" async=""></script><script src="/_next/static/NdA5JnqSHSlUlv69l59hU/_buildManifest.js" async=""></script><script src="/_next/static/NdA5JnqSHSlUlv69l59hU/_ssgManifest.js" async=""></script></body></html>
+</div></article></main><div class="layout_backToHome__1vZsp"><a href="/">← 記事一覧へ</a></div></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"postData":{"id":"with_rollup_ambiguous","contentHtml":"\u003ch2\u003e結論\u003c/h2\u003e\n\u003cp\u003eGROUP BY hoge.id WITH ROLLUP のときに WITH ROLLUP のレコードでは hoge.name などを正しく取得できないケースがある。\u003c/p\u003e\n\u003ch2\u003e前提\u003c/h2\u003e\n\u003cp\u003e\u003cstrong\u003eMySQL バージョン: 5.6 での実行\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eユーザー(users)\u003c/p\u003e\n\u003cp\u003e|id|name|\u003cbr\u003e\n|--|---|\u003cbr\u003e\n|1 |田中|\u003cbr\u003e\n|2 |佐藤|\u003c/p\u003e\n\u003cp\u003eユーザーの決済(transactions)\u003c/p\u003e\n\u003cp\u003e|user_id|price|\u003cbr\u003e\n|-------|-----|\u003cbr\u003e\n|   1   | 1000|\u003cbr\u003e\n|   1   | 2000|\u003cbr\u003e\n|   2   | 3000|\u003cbr\u003e\n|   2   | 4000|\u003c/p\u003e\n\u003cp\u003e上記のような2テーブルがあり、 ユーザーごとの合計決済額と全てのユーザーの合計決済額を出したいとする。\u003cbr\u003e\nそこで下記のようなSQLを実行する。\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003eSELECT \nu.id\n, u.name \n, sum(t.price)\nFROM users AS u \nINNER JOIN transactions AS t\nON u.id = t.user_id\nGROUP BY u.id WTIH ROLLUP\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eすると、WITH ROLLUP の結果として出力されるレコードで正しく\u003ccode\u003eu.name\u003c/code\u003eが表示されない。\u003cbr\u003e\n(\u003ccode\u003eu.id\u003c/code\u003eはNULLで出力されるが\u003ccode\u003eu.name\u003c/code\u003eはランダムで\u003ccode\u003eu.name\u003c/code\u003eのいずれかが出力される)\u003c/p\u003e\n\u003cp\u003eWITH ROLLUP のレコードは 全てまとめたものになっており、単一の値でないため hoge.name がランダムに取得されるため。\u003c/p\u003e\n\u003cp\u003e例えば、WITH ROLLUP のレコードにおいては\u003ccode\u003eu.name\u003c/code\u003eのカラムを\u003ccode\u003e合計\u003c/code\u003eという値で表示したい場合 下記のように記載する。\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003eif(count(distinct mu.id) \u003e 1,\"合計\", u.name) \n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e参考: https://stackoverflow.com/questions/42223119/if-cases-broken-when-using-rollup\u003c/p\u003e\n","title":"SQL で GROUP BY WITH ROLLUP した際に正しく値を取得できないケース","date":"2021-09-10"}},"__N_SSG":true},"page":"/posts/[id]","query":{"id":"with_rollup_ambiguous"},"buildId":"mWcjLbP8V9sk4uTVEYT5P","isFallback":false,"gsp":true}</script><script nomodule="" src="/_next/static/chunks/polyfills-eef578260fd80f8fff94.js"></script><script src="/_next/static/chunks/webpack-189c53927ffd3caf09c3.js" async=""></script><script src="/_next/static/chunks/framework-c5113a73163ba9a6512c.js" async=""></script><script src="/_next/static/chunks/main-460b9f826c931ed60fcd.js" async=""></script><script src="/_next/static/chunks/pages/_app-82ddf399a0c33d87b393.js" async=""></script><script src="/_next/static/chunks/941-aafbdf5c5339f74919c1.js" async=""></script><script src="/_next/static/chunks/pages/posts/%5Bid%5D-4500bce1a92583622a7f.js" async=""></script><script src="/_next/static/mWcjLbP8V9sk4uTVEYT5P/_buildManifest.js" async=""></script><script src="/_next/static/mWcjLbP8V9sk4uTVEYT5P/_ssgManifest.js" async=""></script></body></html>
