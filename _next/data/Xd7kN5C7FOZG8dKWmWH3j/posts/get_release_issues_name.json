@@ -1,0 +1,1 @@
+{"pageProps":{"postData":{"id":"get_release_issues_name","contentHtml":"<h2>コード</h2>\n<pre><code>title_collection =  document.getElementsByClassName(\"zhc-issues-list-item__title\");\nArray.prototype.map.call(title_collection,(title) => {return title.innerText}).join();\n</code></pre>\n","title":"zenhub の release ページで issue のタイトルだけ取得するJS","date":"2021-06-02"}},"__N_SSG":true}
