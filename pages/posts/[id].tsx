@@ -3,6 +3,7 @@ import {getAllPostIds, getPostData} from '../../lib/posts'
 import Head from 'next/head'
 import Date from '../../components/date'
 import utilStyles from '../../styles/utils.module.css'
+import  'github-markdown-css/github-markdown.css';
 import {GetStaticProps, GetStaticPaths} from 'next'
 
 export default function Post({
@@ -24,7 +25,7 @@ export default function Post({
                 <div className={utilStyles.lightText}>
                     <Date dateString={postData.date}/>
                 </div>
-                <div dangerouslySetInnerHTML={{__html: postData.contentHtml}}/>
+                <div className="markdown-body" dangerouslySetInnerHTML={{__html: postData.contentHtml}}/>
             </article>
         </Layout>
     )
